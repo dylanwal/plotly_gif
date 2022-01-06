@@ -1,11 +1,13 @@
-"""
-Generates gif from plotly 3D figures.
-requirements:
-    pip install numpy
-    pip install plotly
-    pip install -U kaleido   # used by plotly to generate png
-    pip install Pillow       # used to convert png to gif
-"""
+import copy
+
+import plotly.graph_objs as go
+
+from . import gif
+
+def three_d_scatter_rotate():
+    pass
+
+
 import multiprocessing as mp
 from typing import List, Optional, Tuple
 import os
@@ -150,7 +152,7 @@ class FigToGif:
 
 
 def testing():
-    # create plot
+    # create_gif plot
     t = np.linspace(0, 10, 50)
     x, y, z = np.cos(t), np.sin(t), t
     fig = go.Figure(go.Scatter3d(x=x, y=y, z=z, mode='markers'))
