@@ -3,6 +3,9 @@ import sys
 from io import BytesIO
 from pathlib import Path
 from datetime import datetime, timedelta
+import glob
+import copy
+import re
 
 from PIL import Image
 
@@ -24,12 +27,26 @@ def format_timedelta(time_: timedelta) -> str:
     return f"{min} min; {sec} sec"
 
 
+def atoi(text):
+    return int(text) if text.isdigit() else text
+
+
+def natural_keys(text):
+    """ sorts in human order """
+    return [atoi(c) for c in re.split(r'(\d+)', text)][1]
+
+
 class GIF:
     """
 
     mode:
         "buffer": no images save
         "png": saves intermediate images to a folder
+    dir_: str
+        directory to for data storage
+    image_path: str
+        where .png will be saved
+        default: gif_imgs in working directory
 
     """
 
@@ -37,8 +54,9 @@ class GIF:
                  mode: str = "buffer",
                  dir_: str = get_exec_path(),
                  image_path: str = None,
+                 gif_name: str = None,
                  gif_path: str = None,
-                 verbose: bool = False
+                 verbose: bool = True
                  ):
         self._mode = None
         self.mode = mode
@@ -57,10 +75,16 @@ class GIF:
         else:
             self.gif_path = self.dir_
 
+        if gif_name is not None:
+            if not gif_name.endswith(".gif"):
+                gif_name = gif_name + ".gif"
+        self.gif_name = gif_name
+
         self.verbose = verbose
         self._start_img_create = None
 
         self.imgs = None
+        self.num_images = 0
 
     @property
     def mode(self):
@@ -76,13 +100,10 @@ class GIF:
 
     def _create_folder(self):
         """ Create new folder. """
-        _folder_name = "temp_gif"
-        os.makedirs(_folder_name)
-        self.dir_ = os.getcwd() + "\\" + _folder_name
-        os.chdir(self.dir_)
+        os.makedirs(self.image_path)
 
         if self.verbose:
-            logging.info(f"Folder for images created: {self.dir_}")
+            logging.info(f"Folder created for images: {self.dir_}")
 
     def create_image(self, fig, **kwargs):
         if self._start_img_create is None:
@@ -101,23 +122,39 @@ class GIF:
         if self.mode == "png":
             if not self._image_folder_present:
                 self._create_folder()
-            pass
+            png_path = self.image_path / f"img_{self.num_images}.png"
+            fig.write_image(png_path)
+
+        self.num_images += 1
 
         if self.verbose:
-            logging.info(f"Image {len(self.imgs)} captured. (elapsed time: "
+            logging.info(f"Image {self.num_images} captured. (elapsed time: "
                          f"{format_timedelta(datetime.now()-self._start_img_create)})")
 
-    def create_gif(self, duration=100, unit="ms", **kwargs):
-        if unit in ("s", "seconds"):
-            duration *= 1000
-        elif unit in ("ms", "milliseconds"):
-            pass
+    def create_gif(self, length: int = 3000, crop: tuple = None, gif_path: str =None, **kwargs):
+        """
+
+        Parameters
+        ----------
+        length: int
+            length of gif in milliseconds
+        crop: tuple[left, top, right, bottom]
+            crop gif
+        gif_path: str
+            anther way to choose the gif path and name.
+            ! path must end with '.gif' !
+        kwargs:
+            See https://pillow.readthedocs.io/en/stable/handbook/image-file-formats.html#gif
+
+        """
+        if gif_path is None:
+            gif_path = self.gif_path / "fig.gif" if self.gif_name is None else self.gif_path / self.gif_name
         else:
-            raise ValueError("Acceptable units are: 's', 'seconds', 'ms', 'milliseconds' ")
+            if gif_path.endswith(".gif"):
+                raise ValueError(f"gif path must end with '.gif'. Provide value: {gif_path}")
 
         _kwargs = {
-            "fp": self.gif_path / "fig.gif",
-            "append_images": self.imgs[1:],
+            "fp": gif_path,
             "save_all": True,
             "optimize": True,
             "between": "startend",
@@ -125,29 +162,23 @@ class GIF:
         }
         _kwargs = {**_kwargs, **kwargs}
 
+        imgs = self.imgs
+
+        if self.imgs is None:  # try to load in pngs if images not in buffer
+            imgs = [Image.open(f) for f in sorted(glob.glob(str(self.image_path / "*.png")), key=natural_keys)]
+
+        if crop is not None:
+            imgs = copy.copy(imgs)  # prevent editing
+            for i, img_ in enumerate(imgs):
+                imgs[i] = img_.crop(crop)
+
+        if "duration" not in kwargs:
+            _kwargs["duration"] = length/len(imgs)
+
         save_time = datetime.now()
-        self.imgs[0].save(**_kwargs)
+        imgs[0].save(append_images=imgs[1:], **_kwargs)
 
         if self.verbose:
-            logging.info(f"gif created: {self.gif_path} (time to generate gif:"
+            logging.info(f"gif created: {gif_path} (time to generate gif:"
                          f" {format_timedelta(datetime.now() - save_time)})")
 
-
-# def png_to_gif(image_arry):
-#     """
-#     Converts a series of pngs into a gif.
-#     https://pillow.readthedocs.io/en/stable/handbook/image-file-formats.html#gif
-#     """
-#     image_path = self.dir_ + "//" + "view_*.png"
-#     gif_path = self.dir_ + "//" + "fig.gif"
-#
-#     img, *imgs = [Image.open(f) for f in sorted(glob.glob(image_path))]
-#     if self.crop is not None:
-#         for i, img_ in enumerate(imgs):
-#             imgs[i] = img_.crop(self.crop)
-#
-#     img.save(fp=gif_path, format='GIF', append_images=imgs, save_all=True,
-#              duration=self.duration, loop=0)
-#
-#     if self.op_printing:
-#         print(f"gif created. {gif_path}")

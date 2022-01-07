@@ -2,6 +2,9 @@
 
 ---
 ---
+![PyPI](https://img.shields.io/pypi/v/plotly_gif)
+![downloads](https://img.shields.io/pypi/dm/plotly_gif)
+![license](https://img.shields.io/github/license/dylanwal/plotly_gif)
 
 A simple python package to generate .gif from your plotly figures. It works for both 2D and 3D figures. It can even 
 create_gif motion for you in 3D plots. 
@@ -16,7 +19,6 @@ pip install plotly-gif
 
 If you are already using plotly, then you should be good. But, just in case, these are the dependencies:
 ```python
-pip install numpy
 pip install plotly    
 pip install kaleido   # used by plotly to generate png
 pip install Pillow    # used to convert png to gif
@@ -27,7 +29,7 @@ pip install Pillow    # used to convert png to gif
 
 There are three common methods:
 
-### Built-in Functions
+### Built-in Functions/ Macros
 
 
 
@@ -79,4 +81,11 @@ gif.create_gif() # generate gif
 
 ---1
 ## Examples
+See Examples folder
+![3d gif](https://github.com/dylanwal/plotly_gif/tree/master/examples/gifs/fig.gif)
 
+## Notes:
+
+### Time to generate gif (60 images per gif)
+* Simple 2D plots with small data sets (100 pts): ~10 sec
+* Simple 3D plots with small data sets (100 pts): ~1.5 min

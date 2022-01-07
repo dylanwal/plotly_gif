@@ -4,7 +4,7 @@ layout = {
         "width": 800,
         "height": 600,
         "showlegend": False,
-        "font": dict(family="Arial", size=18, color="black"),
+        "font": dict(family="Arial", size=14, color="black"),
         "plot_bgcolor": "white"
 }
 
@@ -38,6 +38,3 @@ yaxis = {
     "gridcolor": 'lightgray'
 }
 
-fig.update_layout(layout)
-fig.update_xaxes(xaxis)
-fig.update_yaxes(yaxis)
