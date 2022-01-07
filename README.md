@@ -30,6 +30,24 @@ pip install Pillow    # used to convert png to gif
 There are three common methods:
 
 ### Built-in Functions/ Macros
+Currently, we have the follow:
+* two_d_time_series
+* three_d_scatter_rotate
+* more to come... or submit your own
+
+```python
+import plotly.graph_objs as go
+from plotly_gif import GIF, two_d_time_series
+
+fig = go.Figure()
+# add your traces()
+# add your formatting()
+
+gif = GIF()
+two_d_time_series(gif, fig)
+
+```
+
 
 
 
@@ -79,12 +97,15 @@ gif.create_gif() # generate gif
 ## Options
 
 
----1
+
+---
 ## Examples
-See Examples folder
-![3d gif](https://github.com/dylanwal/plotly_gif/tree/master/examples/gifs/fig.gif)
+See examples folder
+
+![3d gif](https://github.com/dylanwal/plotly_gif/blob/master/examples/gifs/fig.gif)
 
 ## Notes:
+
 
 ### Time to generate gif (60 images per gif)
 * Simple 2D plots with small data sets (100 pts): ~10 sec
