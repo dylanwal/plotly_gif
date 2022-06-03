@@ -55,3 +55,23 @@ def three_d_scatter_rotate(
 def rotate_z(x: float, y: float, z: float, theta: float):
     w = x + 1j * y
     return np.real(np.exp(1j * theta) * w), np.imag(np.exp(1j * theta) * w), z
+
+
+
+def gif_df(gif_: GIF, df: pd.DataFrame, x_col: str, y_col: str, z_col:str, t_col: str):
+    t_values = np.sort(df[t_col].unique())
+    x = df["light_height"].unique()
+    y = df["light_width"].unique()
+    x = np.sort(x)
+    y = np.sort(y)
+    for t in t_values:
+        fig = go.Figure()
+        df_local = df[df[t_col] == t]
+        z = np.empty((len(x), len(y)))
+        for i in range(len(x)):
+            for ii in range(len(x)):
+                z[ii, i] = df_local[z_col].loc[(df_local[x_col] == x[i]) & (df_local[y_col] == y[ii])]
+
+        fig.add_trace(go.Surface(x=x, y=y, z=z))
+        gif_.create_image(fig)
+        
