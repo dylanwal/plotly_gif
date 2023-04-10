@@ -6,10 +6,9 @@ from datetime import datetime, timedelta
 import glob
 import copy
 import re
+import logging
 
 from PIL import Image
-
-from . import logging
 
 
 def get_exec_path():
@@ -121,6 +120,7 @@ class GIF:
                 self.imgs.append(img)
         if self.mode == "png":
             if not self._image_folder_present:
+                self._image_folder_present = True
                 self._create_folder()
             png_path = self.image_path / f"img_{self.num_images}.png"
             fig.write_image(png_path)
@@ -150,7 +150,7 @@ class GIF:
         if gif_path is None:
             gif_path = self.gif_path / "fig.gif" if self.gif_name is None else self.gif_path / self.gif_name
         else:
-            if gif_path.endswith(".gif"):
+            if not gif_path.endswith(".gif"):
                 raise ValueError(f"gif path must end with '.gif'. Provide value: {gif_path}")
 
         _kwargs = {

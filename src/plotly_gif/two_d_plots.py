@@ -2,7 +2,7 @@ import copy
 
 import plotly.graph_objs as go
 
-from . import GIF
+from plotly_gif.gif import GIF
 
 
 def two_d_time_series(

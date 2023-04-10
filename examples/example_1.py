@@ -12,7 +12,7 @@ y = np.sin(x) + np.random.rand(n)
 gif = GIF(verbose=True)
 
 
-@capture(gif)  # tells gif to save each figure that is generate from this function
+@capture(gif)  # tells gif to save each figure that is generated from this function
 def plot_(x_, y_):
     # function that generates plotly figures
     fig = go.Figure()

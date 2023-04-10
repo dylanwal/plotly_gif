@@ -18,12 +18,18 @@ pip install plotly-gif
 ### Dependencies
 
 If you are already using plotly, then you should be good. But, just in case, these are the dependencies:
-```python
-pip install plotly    
-pip install kaleido   # used by plotly to generate png
-pip install Pillow    # used to convert png to gif
-```    
-
+* [plotly](https://github.com/plotly/plotly.py) (5.9.0)
+  * Plots molecules
+* [kaleido](https://github.com/plotly/Kaleido)  (0.1.0post1)
+  * Converts plotly graphs to images (png, svg, etc.)
+  * I am not using the most recent version of kaleido as it does not play nice with my computer. Try the newest 
+    version, but if you are having issues install this specific version.
+* [Pillow](https://github.com/python-pillow/Pillow) (9.2.0)
+  * Used to convert png to gif.
+* [numpy](https://github.com/numpy/numpy) (1.23.1)
+  * Used for math
+  
+    
 ---
 ## Usage
 
@@ -94,17 +100,14 @@ gif.create_gif() # generate gif
 ```
 
 ---
-## Options
-
-
-
----
 ## Examples
 See examples folder
 
-![3d gif](https://github.com/dylanwal/plotly_gif/blob/master/examples/gifs/fig.gif)
+![2d gif](https://github.com/dylanwal/plotly_gif/blob/master/examples/gifs/example_1.gif)
 
-## Notes:
+
+![3d gif](https://github.com/dylanwal/plotly_gif/blob/master/examples/gifs/example_3.gif)
+
 
 
 ### Time to generate gif (60 images per gif)

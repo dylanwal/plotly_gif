@@ -20,7 +20,7 @@ fig.update_xaxes(xaxis)
 fig.update_yaxes(yaxis)
 
 # create gif class to store data
-gif = GIF(mode="png", gif_name="exmaple2", verbose=True)
+gif = GIF(mode="png", gif_name="example_2", verbose=True)
 
 # send it to built-in function that will generate gif time_series.
 two_d_time_series(gif, fig, gif_kwargs={"length": 8000})
