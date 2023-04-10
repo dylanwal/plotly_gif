@@ -113,3 +113,8 @@ See examples folder
 ### Time to generate gif (60 images per gif)
 * Simple 2D plots with small data sets (100 pts): ~10 sec
 * Simple 3D plots with small data sets (100 pts): ~1.5 min
+
+
+## Warning
+
+* If your code 'hangs' or 'gets stuck and doesn't complete' try changing kaleido versions `pip install kaleido==0.1.0post1`
